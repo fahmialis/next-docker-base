@@ -1,21 +1,40 @@
-# Dockerfile.dev
-ARG NODE_VERSION=22.14.0-alpine
-FROM node:${NODE_VERSION} AS base
+# Next.js 15 runs great on modern Node LTS
+FROM node:22-alpine
 
+# App directory
 WORKDIR /app
 
-# Install pnpm or npm
-RUN npm install -g pnpm
+# Reduce noise + speed up installs
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Install dependencies separately for caching
-COPY package*.json ./ pnpm-lock.yaml* ./
-RUN pnpm install
+# Copy only lockfiles & manifest first to maximize layer caching
+COPY package.json ./
+COPY package-lock.json* yarn.lock* pnpm-lock.yaml* ./
 
-# Copy the rest of the project
+# Install deps with cache and auto-detect the package manager
+# - Uses corepack for yarn/pnpm
+# - Falls back to npm if no lockfile is found
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/root/.pnpm-store \
+    apk add --no-cache bash && \
+    if [ -f pnpm-lock.yaml ]; then \
+      corepack enable && corepack prepare pnpm@latest --activate && pnpm install; \
+    elif [ -f yarn.lock ]; then \
+      corepack enable && yarn install --frozen-lockfile; \
+    elif [ -f package-lock.json ]; then \
+      npm ci; \
+    else \
+      npm install; \
+    fi
+
+# Copy the rest of the app
 COPY . .
 
-# Expose dev server
+# Next's default dev port
 EXPOSE 3000
 
-# Run in development mode
-CMD ["pnpm", "dev"]
+# Default dev command (package-manager aware again at runtime)
+CMD bash -lc ' \
+  if [ -f pnpm-lock.yaml ]; then corepack enable && pnpm dev; \
+  elif [ -f yarn.lock ]; then corepack enable && yarn dev; \
+  else npm run dev; fi'
