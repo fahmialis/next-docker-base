@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount the code for hot reload, but keep node_modules inside container
+      - .:/app
+      - /app/node_modules
+    environment:
+      # Ensures file changes are detected in Docker (macOS/Windows)
+      - WATCHPACK_POLLING=true
+    develop:
+      watch:
+        # Sync app source code for live reload
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - node_modules/
+            - .next/
+        # Rebuild if dependencies change
+        - action: rebuild
+          path: package.json
+        - action: rebuild
+          path: pnpm-lock.yaml

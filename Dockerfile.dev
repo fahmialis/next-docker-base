@@ -1,0 +1,21 @@
+# Dockerfile.dev
+ARG NODE_VERSION=22.14.0-alpine
+FROM node:${NODE_VERSION} AS base
+
+WORKDIR /app
+
+# Install pnpm or npm
+RUN npm install -g pnpm
+
+# Install dependencies separately for caching
+COPY package*.json ./ pnpm-lock.yaml* ./
+RUN pnpm install
+
+# Copy the rest of the project
+COPY . .
+
+# Expose dev server
+EXPOSE 3000
+
+# Run in development mode
+CMD ["pnpm", "dev"]
