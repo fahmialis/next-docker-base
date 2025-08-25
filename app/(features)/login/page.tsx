@@ -1,17 +1,30 @@
 'use client';
-import { Controller, useForm } from 'react-hook-form';
 import { loadingAtom } from '@/app/store/loadingAtom';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom } from 'jotai';
+import { Controller, useForm } from 'react-hook-form';
+import * as z from 'zod';
 export default function LoginPage() {
-  const { handleSubmit, control } = useForm<{
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<{
     firstName: string;
-    lastName: string;
+    lastName: number;
   }>({
     defaultValues: {
       firstName: 'ini first name',
-      lastName: '',
+      lastName: 1,
     },
+    resolver: zodResolver(
+      z.object({
+        firstName: z.string(),
+        lastName: z.number(),
+      })
+    ),
   });
+
   const [_isLoading, setIsLoading] = useAtom(loadingAtom);
 
   const onSubmit = handleSubmit((data) => {
@@ -42,13 +55,16 @@ export default function LoginPage() {
         name="lastName"
         control={control}
         render={({ field }) => (
-          <select {...field}>
-            {[1, 2, 3, 4, 5].map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
+          <>
+            <select {...field}>
+              {[1, 2, 3, 4, 5].map((item) => (
+                <option key={item} value={item.toString()}>
+                  {item}
+                </option>
+              ))}
+            </select>
+            <p style={{ color: 'red' }}>{errors.lastName?.message}</p>
+          </>
         )}
       />
       <input type="submit" />
