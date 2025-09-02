@@ -2,7 +2,7 @@
 
 import { useAtom } from 'jotai';
 import { useIsFetching, useIsMutating } from '@tanstack/react-query';
-import { loadingAtom } from '../store/loadingAtom';
+import { loadingAtom } from '../app/store/loadingAtom';
 
 export default function LoadingIndicator() {
   const [isLoading] = useAtom(loadingAtom);
