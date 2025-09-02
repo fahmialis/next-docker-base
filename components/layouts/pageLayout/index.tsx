@@ -25,7 +25,14 @@ import {
   Users,
 } from 'lucide-react';
 
-const navItems = [
+interface MenuItem {
+  href: string;
+  label: string;
+  icon?: unknown;
+  children?: MenuItem[];
+}
+
+const navItems: MenuItem[] = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/users', label: 'Users', icon: Users },
   {
@@ -33,11 +40,19 @@ const navItems = [
     label: 'Settings',
     icon: Settings,
     children: [
-      { href: '/settings/profile', label: 'Profile' },
+      {
+        href: '/settings/profile',
+        label: 'Profile',
+        children: [
+          { href: '/settings/profile', label: 'Profile' },
+          { href: '/settings/account', label: 'Account' },
+        ],
+      },
       { href: '/settings/account', label: 'Account' },
     ],
   },
 ];
+
 export default function PageLayout(props: {
   readonly children: React.ReactNode;
   footer?: React.ReactNode;
@@ -51,14 +66,16 @@ export default function PageLayout(props: {
     }
   }, []);
 
-  function sideBar(): React.ReactNode {
-    return navItems?.map((navItem, index) => {
-      return navItem?.children?.length ? (
+  function renderNavItem(item: MenuItem, index: number): React.ReactNode {
+    const hasChildren = item?.children && item.children.length > 0;
+
+    if (hasChildren) {
+      return (
         <Collapsible key={index}>
           <div className="flex items-center justify-between gap-4 px-4 py-1">
             <CollapsibleTrigger asChild>
               <nav className="flex gap-1 items-center justify-between w-full">
-                <h4 className="text-sm font-semibold">{navItem?.label}</h4>
+                <h4 className="text-sm font-semibold">{item?.label}</h4>
                 <Button variant="ghost" size="icon" className="size-8">
                   <ChevronsUpDown />
                   <span className="sr-only">Toggle</span>
@@ -67,21 +84,26 @@ export default function PageLayout(props: {
             </CollapsibleTrigger>
           </div>
           <CollapsibleContent>
-            <div className="!ml-6 space-y-1">
-              {navItem?.children?.map((child, childIndex) => (
-                <div key={childIndex} className="text-sm text-muted-foreground">
-                  {child?.label}
-                </div>
-              ))}
+            <div className="!ml-6 space-y-1 w-full">
+              {item?.children?.length &&
+                item?.children.map((child: MenuItem, childIndex: number) =>
+                  renderNavItem(child, childIndex)
+                )}
             </div>
           </CollapsibleContent>
         </Collapsible>
-      ) : (
-        <div key={index}>
-          <h4 className="text-sm font-semibold px-4 py-1">{navItem?.label}</h4>
-        </div>
       );
-    });
+    }
+
+    return (
+      <div key={index}>
+        <h4 className="text-sm font-semibold px-4 py-1">{item?.label}</h4>
+      </div>
+    );
+  }
+
+  function sideBar(): React.ReactNode {
+    return navItems?.map((navItem, index) => renderNavItem(navItem, index));
   }
 
   function header(): React.ReactNode {
