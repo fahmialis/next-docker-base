@@ -1,6 +1,6 @@
+import LoadingIndicator from '@/components/loading';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import LoadingIndicator from '@/components/loading';
 import './globals.css';
 import { AppProviders } from './providers';
 
