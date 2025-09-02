@@ -24,6 +24,8 @@ import {
   Settings,
   Users,
 } from 'lucide-react';
+import PageBreadcrumb from './breadcrumb';
+import PageFooter from './footer';
 
 interface MenuItem {
   href: string;
@@ -55,8 +57,8 @@ const navItems: MenuItem[] = [
 
 export default function PageLayout(props: {
   readonly children: React.ReactNode;
-  footer?: React.ReactNode;
-  breadCrumb?: React.ReactNode;
+  footer?: React.ReactElement<typeof PageFooter>;
+  breadCrumb?: React.ReactElement<typeof PageBreadcrumb>;
 }) {
   const [showSidebar, setShowSidebar] = React.useState(false);
 
