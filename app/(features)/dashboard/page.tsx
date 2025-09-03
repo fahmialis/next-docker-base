@@ -32,9 +32,11 @@ export default function DashboardPage() {
       }
     >
       <h1 className="text-red-800 text-7xl">DashboardPage</h1>
-      {data?.results?.map((user) => (
-        <UserCard key={user.name}>{user.name}</UserCard>
-      ))}
+      <div className="flex gap-2">
+        {data?.results?.map((user) => (
+          <UserCard key={user.name}>{user.name}</UserCard>
+        ))}
+      </div>
     </PageLayout>
   );
 }
