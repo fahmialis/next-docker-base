@@ -5,7 +5,7 @@ export default function PageFooter(props: {
   rightButton?: React.ReactNode;
 }) {
   return (
-    <div className="h-16 bg-amber-800 flex items-center justify-between p-2.5">
+    <div className="h-16 bg-gray-50 flex items-center justify-between p-2.5 border-t border-gray-300 shadow-md">
       <div className="flex justify-start">
         {props?.leftButton ? props?.leftButton : null}
       </div>

@@ -1,162 +1,48 @@
 'use client';
-import React, { useEffect } from 'react';
 
-import { Button } from '@/components/ui/button';
+import { AppSidebar } from '@/components/layouts/sidebar/app-sidebar';
+import { Separator } from '@/components/ui/separator';
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-import {
-  ChevronsUpDown,
-  Home,
-  LogOut,
-  Menu,
-  Settings,
-  Users,
-} from 'lucide-react';
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar';
+import { usePathname } from 'next/navigation';
+import React from 'react';
 import PageBreadcrumb from './breadcrumb';
 import PageFooter from './footer';
-
-interface MenuItem {
-  href: string;
-  label: string;
-  icon?: unknown;
-  children?: MenuItem[];
-}
-
-const navItems: MenuItem[] = [
-  { href: '/dashboard', label: 'Dashboard', icon: Home },
-  { href: '/users', label: 'Users', icon: Users },
-  {
-    href: '/settings',
-    label: 'Settings',
-    icon: Settings,
-    children: [
-      {
-        href: '/settings/profile',
-        label: 'Profile',
-        children: [
-          { href: '/settings/profile', label: 'Profile' },
-          { href: '/settings/account', label: 'Account' },
-        ],
-      },
-      { href: '/settings/account', label: 'Account' },
-    ],
-  },
-];
 
 export default function PageLayout(props: {
   readonly children: React.ReactNode;
   footer?: React.ReactElement<typeof PageFooter>;
   breadCrumb?: React.ReactElement<typeof PageBreadcrumb>;
 }) {
-  const [showSidebar, setShowSidebar] = React.useState(false);
-
-  useEffect(() => {
-    if (window.innerWidth > 1024) {
-      setShowSidebar(true);
-    }
-  }, []);
-
-  function renderNavItem(item: MenuItem, index: number): React.ReactNode {
-    const hasChildren = item?.children && item.children.length > 0;
-
-    if (hasChildren) {
-      return (
-        <Collapsible key={index}>
-          <div className="flex items-center justify-between gap-4 px-4 py-1">
-            <CollapsibleTrigger asChild>
-              <nav className="flex gap-1 items-center justify-between w-full">
-                <h4 className="text-sm font-semibold">{item?.label}</h4>
-                <Button variant="ghost" size="icon" className="size-8">
-                  <ChevronsUpDown />
-                  <span className="sr-only">Toggle</span>
-                </Button>
-              </nav>
-            </CollapsibleTrigger>
-          </div>
-          <CollapsibleContent>
-            <div className="!ml-6 space-y-1 w-full">
-              {item?.children?.length &&
-                item?.children.map((child: MenuItem, childIndex: number) =>
-                  renderNavItem(child, childIndex)
-                )}
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
-      );
-    }
-
-    return (
-      <div key={index}>
-        <h4 className="text-sm font-semibold px-4 py-1">{item?.label}</h4>
-      </div>
-    );
-  }
-
-  function sideBar(): React.ReactNode {
-    return navItems?.map((navItem, index) => renderNavItem(navItem, index));
-  }
-
-  function header(): React.ReactNode {
-    return (
-      <header className="flex justify-between items-center bg-amber-200 !py-2.5">
-        <Button onClick={() => setShowSidebar(!showSidebar)} variant={'ghost'}>
-          <Menu />
-        </Button>
-        <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel className="flex items-center gap-2 !p-4 justify-end">
-                Logout <LogOut size={16} />
-              </DropdownMenuLabel>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </header>
-    );
-  }
-
-  const sideBarClassname = `${showSidebar ? 'w-1/6' : 'w-0'} flex flex-col transition-all duration-300 ease-in-out overflow-hidden bg-red-200`;
-
+  const url = usePathname();
   return (
-    <div className="h-screen flex flex-col">
-      {/* Header */}
-      <div className="flex-shrink-0">{header()}</div>
+    <div className="relative flex flex-col h-screen overflow-hidden">
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 w-full bg-gray-50 border-b border-gray-300">
+            <div className="flex items-center gap-2 px-4">
+              <SidebarTrigger className="-ml-1" />
+              <Separator
+                orientation="vertical"
+                className="mr-2 data-[orientation=vertical]:h-4"
+              />
+              <PageBreadcrumb paths={url?.split('/')?.filter(Boolean)} />
+            </div>
+          </header>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar (fixed height, scrollable if needed) */}
-        <div className={`${sideBarClassname} flex-shrink-0 overflow-y-auto`}>
-          {showSidebar ? sideBar() : <div></div>}
-        </div>
+          <div className="flex-1 overflow-y-auto flex flex-col gap-4">
+            <div className="p-4">{props?.children}</div>
+          </div>
 
-        {/* Main Content (scrolls independently) */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {props?.breadCrumb ? (
-            <div className="flex-shrink-0">{props?.breadCrumb}</div>
+          {props?.footer ? (
+            <div className="absolute bottom-0 w-full">{props?.footer}</div>
           ) : null}
-
-          <div className="flex-1 overflow-y-auto">{props?.children}</div>
-
-          {props?.footer ? props?.footer : null}
-        </div>
-      </div>
+        </SidebarInset>
+      </SidebarProvider>
     </div>
   );
 }

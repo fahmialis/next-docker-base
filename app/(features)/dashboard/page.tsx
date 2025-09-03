@@ -20,7 +20,6 @@ export default function DashboardPage() {
       }
       footer={
         <PageFooter
-          // leftButton={'test left'}
           rightButton={
             <div className="flex items-center gap-2">
               <Button variant={'secondary'}>test</Button>
@@ -32,9 +31,11 @@ export default function DashboardPage() {
       }
     >
       <h1 className="text-red-800 text-7xl">DashboardPage</h1>
-      {data?.results?.map((user) => (
-        <UserCard key={user.name}>{user.name}</UserCard>
-      ))}
+      <div>
+        {data?.results?.map((user) => (
+          <UserCard key={user.name}>{user.name}</UserCard>
+        ))}
+      </div>
     </PageLayout>
   );
 }

@@ -1,3 +1,5 @@
+import PageLayout from '@/components/layouts/pageLayout';
+
 export default function DashboardUserDetail() {
-  return <div>DashboardUserDetail</div>;
+  return <PageLayout>DashboardUserDetail</PageLayout>;
 }
