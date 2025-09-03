@@ -20,7 +20,6 @@ export default function DashboardPage() {
       }
       footer={
         <PageFooter
-          // leftButton={'test left'}
           rightButton={
             <div className="flex items-center gap-2">
               <Button variant={'secondary'}>test</Button>
