@@ -32,7 +32,7 @@ export default function DashboardPage() {
       }
     >
       <h1 className="text-red-800 text-7xl">DashboardPage</h1>
-      <div className="flex gap-2">
+      <div>
         {data?.results?.map((user) => (
           <UserCard key={user.name}>{user.name}</UserCard>
         ))}
