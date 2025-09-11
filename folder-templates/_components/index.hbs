@@ -1,0 +1,14 @@
+import React, { ReactNode } from "react";
+
+type {{pascalCase name}}Props = {
+  children: ReactNode;
+  className?: string;
+};
+
+export default function {{pascalCase name}}({ children, className }: {{pascalCase name}}Props) {
+  return (
+    <div className={`rounded-2xl shadow-md border border-gray-200 bg-white p-4 ${className ?? ""}`}>
+      {children}
+    </div>
+  );
+}
