@@ -1,0 +1,13 @@
+import { makeEndpoint } from "@zodios/core";
+import { {{camelCase name}}ResponseSchema } from "../_schema/list";
+
+const get{{pascalCase name}}List = makeEndpoint({
+  alias: "get{{pascalCase name}}List",
+  method: "get",
+  path: "{{kebabCase name}}",
+  response: {{camelCase name}}ResponseSchema,
+});
+
+export const endpoints = {
+  get{{pascalCase name}}List,
+};

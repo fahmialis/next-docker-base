@@ -1,0 +1,17 @@
+import { Zodios } from "@zodios/core";
+import { endpoints } from "./endpoints";
+import { ZodiosHooks } from "@zodios/react";
+
+export const {{camelCase name}}ApiClient = new Zodios(
+  "https://pokeapi.co/api/v2",
+  [endpoints.get{{pascalCase name}}List],
+  {
+    validate: true,
+    // axiosConfig: createAxiosConfig(),
+  }
+);
+
+export const {{camelCase name}}ApiHooks = new ZodiosHooks(
+  "{{camelCase name}}",
+  {{camelCase name}}ApiClient
+);
