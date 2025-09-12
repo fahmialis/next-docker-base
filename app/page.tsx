@@ -1,5 +1,5 @@
-import PageLayout from '@/components/layouts/pageLayout';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
-  return <PageLayout>main page</PageLayout>;
+export default function RootPage() {
+  redirect('/login');
 }
