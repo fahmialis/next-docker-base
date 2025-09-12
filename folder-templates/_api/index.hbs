@@ -1,3 +1,4 @@
+import { createAxiosInstance } from '@/lib/axios';
 import { Zodios } from "@zodios/core";
 import { endpoints } from "./endpoints";
 import { ZodiosHooks } from "@zodios/react";
@@ -7,7 +8,7 @@ export const {{camelCase name}}ApiClient = new Zodios(
   [endpoints.get{{pascalCase name}}List],
   {
     validate: true,
-    // axiosConfig: createAxiosConfig(),
+    axiosInstance: createAxiosInstance(),
   }
 );
 
