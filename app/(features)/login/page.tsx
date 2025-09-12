@@ -1,7 +1,5 @@
 'use client';
-import { loadingAtom } from '@/app/store/loadingAtom';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAtom } from 'jotai';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 export default function LoginPage() {
@@ -25,15 +23,8 @@ export default function LoginPage() {
     ),
   });
 
-  const [_isLoading, setIsLoading] = useAtom(loadingAtom);
-
   const onSubmit = handleSubmit((data) => {
-    setIsLoading(true);
     console.log(data);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
   });
 
   return (

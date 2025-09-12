@@ -1,12 +1,12 @@
 'use client';
 
 import PageLayout from '@/components/layouts/pageLayout';
-import { dashboardApiHooks } from './_api';
-import UserCard from './_components/userCard';
-import { usePathname } from 'next/navigation';
 import PageBreadcrumb from '@/components/layouts/pageLayout/breadcrumb';
 import PageFooter from '@/components/layouts/pageLayout/footer';
 import { Button } from '@/components/ui/button';
+import { usePathname } from 'next/navigation';
+import { dashboardApiHooks } from './_api';
+import UserCard from './_components/userCard';
 
 export default function DashboardPage() {
   const pathname = usePathname();
@@ -22,9 +22,8 @@ export default function DashboardPage() {
         <PageFooter
           rightButton={
             <div className="flex items-center gap-2">
-              <Button variant={'secondary'}>test</Button>
-              <Button>test</Button>
-              <Button>test</Button>
+              <Button variant={'secondary'}>secondary button</Button>
+              <Button>main button</Button>
             </div>
           }
         />
