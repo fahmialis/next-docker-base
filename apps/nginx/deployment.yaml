@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: next-docker-base
-          image: ghcr.io/fahmialis/next-docker-base:${IMAGE_TAG}
+          image: ghcr.io/fahmialis/next-docker-base:8d946fb78dbdd16ae3864d8251f9be86a1e22e01
           ports:
             - containerPort: 3000
           env:
