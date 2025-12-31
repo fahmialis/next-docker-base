@@ -1,19 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: next-docker-base
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: next-docker-base
   template:
     metadata:
       labels:
-        app: nginx
+        app: next-docker-base
     spec:
       containers:
-        - name: nginx
-          image: nginx:latest
+        - name: next-docker-base
+          image: ghcr.io/fahmialis/next-docker-base:${IMAGE_TAG}
           ports:
-            - containerPort: 80
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
